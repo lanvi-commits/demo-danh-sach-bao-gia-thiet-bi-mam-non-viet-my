@@ -429,8 +429,8 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 .quote-list-hero .desc { margin: 0; }
 
 /* ---------- 203 · giá liên hệ / chưa chọn mẫu ---------- */
-/* 203.1 dòng SP giá liên hệ = kiểu .price-contact của thẻ SP: 14px · 700 · đỏ */
-.quote-list-content .price.price-contact { font-size: 14px; line-height: 1.4; }
+/* 203.1 dòng SP giá liên hệ: CÙNG CỠ với giá số của trang này (.price 18px · 700 · đỏ của theme) — không đặt font-size riêng.
+   (Trên thẻ SP giá số và giá liên hệ cùng 14px; ở đây giá số 18px nên giá liên hệ cũng 18px.) */
 /* 203.4 SP có nhiều mẫu mà khách chưa chọn */
 .quote-list-content .price.price-pending { font-size: 14px; line-height: 1.4; font-weight: 600; color: var(--brand-muted); }
 /* 203.2 khối Giá trị dự tính khi có dòng giá liên hệ / chưa chọn mẫu */
@@ -2365,7 +2365,7 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 
 		<h3><span class="vmx-row-tag">203</span>Giá liên hệ / chưa chọn mẫu (hết “0đ”)</h3>
 		<ul>
-			<li>PHP: mỗi card thêm <code>data-contact-price="&lt;?php echo $product-&gt;get_price() === '' ? '1' : '0'; ?&gt;"</code>, in sẵn <code>&lt;div class="price price-contact"&gt;Giá: Liên hệ&lt;/div&gt;</code> (14px · 700 · đỏ như thẻ SP).</li>
+			<li>PHP: mỗi card thêm <code>data-contact-price="&lt;?php echo $product-&gt;get_price() === '' ? '1' : '0'; ?&gt;"</code>, in sẵn <code>&lt;div class="price price-contact"&gt;Giá: Liên hệ&lt;/div&gt;</code> — <b>cùng cỡ với giá số của trang này</b> (18px · 700 · đỏ, giữ nguyên <code>.price</code> của theme, không đặt cỡ riêng). Thẻ SP dùng 14px vì giá số ở đó cũng 14px.</li>
 			<li><code>refreshTotals()</code> chia 3 nhóm: có giá · giá liên hệ · chưa chọn mẫu. Có nhóm 2/3 → nhãn “Tạm tính (N sản phẩm có giá)” + dòng “+ M sản phẩm giá liên hệ · Liên hệ” / “+ K sản phẩm chưa chọn mẫu · Chờ chọn mẫu” + câu 15–30 phút. Không dòng nào có giá → ô tổng ghi chữ “Liên hệ” 18px thay con số. Toàn có giá → như cũ.</li>
 			<li><code>syncFormItems()</code> (email): dòng giá liên hệ ghi <code>Đơn giá: Liên hệ</code>, bỏ “Thành tiền”. Xem chuỗi email thật ở cuối ngăn này.</li>
 		</ul>
