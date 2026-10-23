@@ -527,15 +527,6 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 /* =====================================================================
    VỎ DEMO (không thuộc trang) — khung đánh dấu chỗ sửa, bảng demo, ghi chú DEV
    ===================================================================== */
-html.vmx-mark [data-vmx-row] { outline: 2px dashed var(--brand-accent); outline-offset: 4px; position: relative; }
-html.vmx-mark [data-vmx-row]::after {
-  content: attr(data-vmx-row); position: absolute; top: -13px; right: -13px; z-index: 6; min-width: 34px; height: 22px; padding: 0 7px;
-  border-radius: 11px; background: var(--brand-accent); color: var(--brand-on-dark); font: 700 11px/22px var(--brand-body); text-align: center; pointer-events: none;
-}
-html.vmx-mark .estimate[data-vmx-row] { outline-offset: 3px; overflow: visible; }
-html.vmx-mark .estimate[data-vmx-row] .estimate-head { border-radius: 16px 16px 0 0; }
-html.vmx-mark .estimate[data-vmx-row]::after { top: 16px; right: 16px; }
-html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 
 .vmx-panel {
   position: fixed; left: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 10090; width: 300px; max-width: calc(100vw - 32px);
@@ -1789,7 +1780,7 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
     </div>
 <main id="main" class="site-main page-quote-list">
 	<!-- Bản đề xuất 23/10/2026 theo tab "Review tổng thể website" dòng 201–207.
-	     data-vmx-row="2xx" = số dòng trong sheet (bảng demo bật/tắt khung đánh dấu). Class giữ nguyên template-compare.php để DEV đối chiếu. -->
+	     Mỗi CHANGE ghi số dòng sheet. Class giữ nguyên template-compare.php để DEV đối chiếu. -->
 	<div class="breadcrumb-wrapper">
 		<div class="container">
 			<nav aria-label="breadcrumbs" class="rank-math-breadcrumb"><p><a href="https://website-demo-02.thcmedia.vn">Trang chủ</a><span class="separator"> <i class="fa-solid fa-angle-right"></i> </span><span class="last">Danh sách báo giá</span></p></nav>
@@ -1801,7 +1792,7 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 				<h1 class="title-thc">Danh sách sản phẩm cần báo giá</h1>
 				<!-- CHANGE 202: mô tả dưới H1 — 1 mốc 15–30 phút + giờ làm việc (khớp trang Báo giá thành công), thêm "mẫu mã",
 				     bỏ "giá bán lẻ niêm yết" (đa số SP là giá liên hệ). Nháp chờ SEO duyệt. <div> → <p>. -->
-				<p class="desc" data-vmx-row="202">Kiểm tra sản phẩm, mẫu mã, số lượng và ghi chú trước khi gửi. Chuyên viên gửi báo giá trong 15–30 phút trong giờ làm việc (08:00–18:00, Thứ 2 – Thứ 7). Giá trên website là giá tham khảo; báo giá chính thức tính theo số lượng, địa điểm lắp đặt, phí vận chuyển và VAT 10%.</p>
+				<p class="desc">Kiểm tra sản phẩm, mẫu mã, số lượng và ghi chú trước khi gửi. Chuyên viên gửi báo giá trong 15–30 phút trong giờ làm việc (08:00–18:00, Thứ 2 – Thứ 7). Giá trên website là giá tham khảo; báo giá chính thức tính theo số lượng, địa điểm lắp đặt, phí vận chuyển và VAT 10%.</p>
 			</div>
 		</div>
 	</section>
@@ -1809,7 +1800,7 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 		<div class="container">
 			<div class="count-row">
 				<!-- CHANGE 205: không còn trần 3 SP (demo mặc định 6 dòng) -->
-				<span class="count-badge" data-quote-count-badge data-vmx-row="205" aria-live="polite">6 sản phẩm đã chọn</span>
+				<span class="count-badge" data-quote-count-badge aria-live="polite">6 sản phẩm đã chọn</span>
 			</div>
 			<div class="layout">
 				<div class="col-products">
@@ -1834,7 +1825,7 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 					</div>
 					<!-- CHANGE 201: form gọn 2 cột (mẫu dochoitamphuc.com/danh-sach-bao-gia/), cả khung lọt 1 màn hình 1440×900;
 					     tiêu đề "Thông tin nhận báo giá" bỏ <h2> → <p> (form đặt tên bằng aria-labelledby) -->
-					<div class="form-panel" data-vmx-row="201">
+					<div class="form-panel">
 						<p class="form-title" id="quote-form-title">Thông tin nhận báo giá</p>
 						<div class="notice">
 							<i class="fa-solid fa-circle-info" aria-hidden="true"></i>
@@ -1846,7 +1837,7 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 								<!-- CHANGE 206.2: danh sách trống → chặn gửi, báo ngay đầu form -->
 								<div class="vmx-form-alert" role="alert" tabindex="-1" hidden data-form-alert></div>
 								<!-- CHANGE 207.1: mọi <label> có for= trỏ id= của ô (CF7: [text* your-name id:qf-name]) -->
-								<div class="form-grid" data-vmx-row="207">
+								<div class="form-grid">
 									<div class="form-field">
 										<label for="qf-name">Họ và tên người liên hệ <span class="req" aria-hidden="true">*</span></label>
 										<span class="wpcf7-form-control-wrap" data-name="your-name"><input id="qf-name" class="wpcf7-form-control" type="text" name="your-name" autocomplete="name" aria-required="true" aria-describedby="qf-name-err" placeholder="Nguyễn Văn A"></span>
@@ -1889,7 +1880,7 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 									</div>
 								</div>
 								<!-- CHANGE 206.1: ô đồng ý 20px, tick đỏ (accent-color), cách chữ 8px; chưa tick mà bấm gửi → báo lỗi ngay dưới ô -->
-								<div class="consent-row" data-vmx-row="206">
+								<div class="consent-row">
 									<input type="checkbox" id="qf-consent" name="your-consent" value="1" aria-describedby="qf-consent-err">
 									<label for="qf-consent">Tôi đồng ý để Thiết bị mầm non Việt Mỹ liên hệ tư vấn và báo giá theo thông tin đã cung cấp.</label>
 									<span class="vmx-tip" id="qf-consent-err" hidden></span>
@@ -2312,7 +2303,6 @@ html.vmx-mark .count-badge[data-vmx-row]::after { top: -8px; right: -40px; }
 			<button type="button" aria-pressed="true" data-req="0">Không bắt buộc</button>
 			<button type="button" aria-pressed="false" data-req="1">Bắt buộc</button>
 		</div>
-		<label class="vmx-check"><input type="checkbox" checked data-mark> Khung đỏ = chỗ sửa (số = dòng sheet)</label>
 		<button type="button" class="vmx-btn" data-cap>Thử thêm SP khi đã đủ 100 dòng (205)</button>
 		<button type="button" class="vmx-btn vmx-btn--accent" data-dev-open>Ghi chú DEV + nội dung email</button>
 		<p class="vmx-panel-note">Form không gửi đi đâu. Đối chiếu bản đang chạy: <a href="https://website-demo-02.thcmedia.vn/danh-sach-bao-gia/" target="_blank" rel="noopener" style="color:inherit">website-demo-02</a></p>
@@ -3069,16 +3059,15 @@ jQuery(function ($) {
   }
 
   /* ---------- Vẽ 1 dòng SP ---------- */
-  function cardHTML(r, seen) {
+  function cardHTML(r) {
     var p = P[r.pid], head, priceMeta = '';
-    function mark(type, row) { if (seen[type]) return ''; seen[type] = 1; return ' data-vmx-row="' + row + '"'; }
     if (p.vars) {                                           /* 204: chọn / đổi mẫu ngay trong dòng */
       var empty = !r.vid, inval = empty && r.invalid;
       var opts = '<option value="0">' + (p.attr === 'color' ? 'Chọn màu sắc' : 'Chọn mẫu mã') + '</option>' + p.vars.map(function (x) {
         return '<option value="' + x.id + '"' + (x.id === r.vid ? ' selected' : '') + '>' + esc(varLabel(x)) + '</option>';
       }).join('');
       var hint = empty ? (S.req ? 'Bắt buộc chọn ' + attrName(p).toLowerCase() + ' trước khi gửi.' : 'Chưa chọn ' + attrName(p).toLowerCase() + ': chuyên viên sẽ gợi ý mẫu phù hợp khi báo giá.') : '';
-      head = '<div class="qvar' + (empty ? ' is-empty' : '') + (inval ? ' is-invalid' : '') + '"' + mark('var', 204) + '>' +
+      head = '<div class="qvar' + (empty ? ' is-empty' : '') + (inval ? ' is-invalid' : '') + '">' +
         '<label class="qvar-label" for="qv-' + r.key + '">' + attrName(p) + ':</label>' +
         '<select id="qv-' + r.key + '" name="quote_variant[' + r.key + ']" data-quote-variant' + (hint ? ' aria-describedby="qh-' + r.key + '"' : '') + (inval ? ' aria-invalid="true"' : '') + '>' + opts + '</select>' +
         '<button type="button" class="qvar-more" data-quote-more>+ Thêm ' + (p.attr === 'color' ? 'màu' : 'mẫu') + ' khác</button>' +
@@ -3089,8 +3078,8 @@ jQuery(function ($) {
     if (p.regular) priceMeta = '<div class="price-meta"><span class="regular">' + wc(p.regular) + '</span> <span class="discount">' + p.discount + '</span></div>';
     var u = rowUnit(r), price;
     if (u === null) {                                       /* 203.1 / 203.4 */
-      price = p.contact ? '<div class="price price-contact"' + mark('contact', 203) + '>Giá: Liên hệ</div>'
-                        : '<div class="price price-pending"' + mark('pending', 203) + '>Chọn mẫu để xem giá</div>';
+      price = p.contact ? '<div class="price price-contact">Giá: Liên hệ</div>'
+                        : '<div class="price price-pending">Chọn mẫu để xem giá</div>';
     } else price = '<div class="price">' + formatMoney(u * r.qty) + '</div>';
     var x = varOf(p, r.vid), thumb = x ? x.img : p.img;
     return '<article class="quote-product-card" data-key="' + r.key + '" data-product-id="' + r.pid + '"' + (x ? ' data-variation-id="' + x.id + '"' : '') + '>' +
@@ -3101,26 +3090,25 @@ jQuery(function ($) {
       '<div class="qty" data-quote-qty role="group" aria-label="Số lượng"><button type="button" class="qty-btn qty-minus" aria-label="Giảm số lượng">' + SVG.minus + '</button>' +
       '<span class="qty-value" aria-live="polite">' + r.qty + '</span>' +
       '<button type="button" class="qty-btn qty-plus" aria-label="Tăng số lượng">' + SVG.plus + '</button></div></div>' +
-      '<div class="note-wrap"' + mark('note', 207) + '><span class="note-ico" aria-hidden="true">' + SVG.pen + '</span>' +
+      '<div class="note-wrap"><span class="note-ico" aria-hidden="true">' + SVG.pen + '</span>' +
       '<input type="text" class="note-input" name="quote_note[' + r.key + ']" aria-label="Ghi chú cho ' + esc(p.name) + '" data-quote-note placeholder="Ghi chú cho sản phẩm này" autocomplete="off" value="' + esc(r.note || '') + '"></div></article>';
   }
 
   function emptyHTML() {                                    /* 206.2 */
-    return '<div class="empty-state" data-vmx-row="206"><p class="empty-title">Danh sách báo giá đang trống</p>' +
+    return '<div class="empty-state"><p class="empty-title">Danh sách báo giá đang trống</p>' +
       '<p class="empty-text">Mở trang sản phẩm và bấm “Thêm vào báo giá”. Gợi ý danh mục:</p><ul class="vmx-cat-links">' +
       CATS.map(function (c) { return '<li><a href="https://website-demo-02.thcmedia.vn/' + c[0] + '">' + esc(c[1]) + '</a></li>'; }).join('') + '</ul></div>';
   }
 
   /* ---------- Vẽ cả danh sách + khối Giá trị dự tính (203.2, 203.3) ---------- */
   function render() {
-    var q = S.quote, seen = {};
-    $('[data-quote-product-list]').innerHTML = q.length ? q.map(function (r) { return cardHTML(r, seen); }).join('') : emptyHTML();
+    var q = S.quote;
+    $('[data-quote-product-list]').innerHTML = q.length ? q.map(cardHTML).join('') : emptyHTML();
     $('[data-quote-count-badge]').textContent = q.length + ' sản phẩm đã chọn';
     var label = $('[data-quote-total-label]'), tot = $('[data-quote-total]'), ex = $('[data-quote-extras]');
     var priced = 0, sum = 0, contact = 0, pending = 0;
     q.forEach(function (r) { var u = rowUnit(r); if (u === null) { if (P[r.pid].contact) contact++; else pending++; } else { priced++; sum += u * r.qty; } });
-    var est = $('.quote-list-content .estimate');
-    tot.classList.remove('is-contact'); est.removeAttribute('data-vmx-row'); ex.innerHTML = '';
+    tot.classList.remove('is-contact'); ex.innerHTML = '';
     if (!contact && !pending) {                             /* toàn SP có giá: giữ như hiện tại */
       label.textContent = 'Tổng cộng (' + q.length + ' sản phẩm)'; tot.textContent = formatMoney(sum);
     } else {
@@ -3134,7 +3122,7 @@ jQuery(function ($) {
       if (showPending) h += '<div class="estimate-extra"><span>+ ' + pending + ' sản phẩm chưa chọn mẫu</span><span class="estimate-extra-value">Chờ chọn mẫu</span></div>';
       if (showContact) h += '<div class="estimate-extra"><span>+ ' + contact + ' sản phẩm giá liên hệ</span><span class="estimate-extra-value">Liên hệ</span></div>';
       h += '<p class="estimate-note">' + (pending ? 'Sản phẩm giá liên hệ hoặc chưa chọn mẫu được chuyên viên báo giá riêng trong 15–30 phút.' : 'Sản phẩm giá liên hệ được chuyên viên báo giá riêng trong 15–30 phút.') + '</p>';
-      ex.innerHTML = h; est.setAttribute('data-vmx-row', '203');   /* cả khối đổi khi có giá liên hệ / chưa chọn mẫu */
+      ex.innerHTML = h;
     }
     syncEmail();
   }
@@ -3262,9 +3250,6 @@ jQuery(function ($) {
   }
   seg('[data-scn-group]', 'data-scn', load);
   seg('[data-req-group]', 'data-req', function (v) { S.req = v === '1'; S.quote.forEach(function (r) { r.invalid = false; }); alertBox.hidden = true; render(); });
-  var root = document.documentElement;
-  root.classList.add('vmx-mark');
-  $('[data-mark]').addEventListener('change', function () { root.classList.toggle('vmx-mark', this.checked); });
   $('[data-cap]').addEventListener('click', capToast);
   var panel = $('#vmx-panel'), tgl = $('[data-panel-toggle]');
   function panelOpen(on) { panel.dataset.open = String(on); tgl.setAttribute('aria-expanded', String(on)); $('[data-panel-caret]').textContent = on ? '▾' : '▸'; }
