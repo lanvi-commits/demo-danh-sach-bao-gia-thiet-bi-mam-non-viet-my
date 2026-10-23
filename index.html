@@ -440,21 +440,38 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 /* 203.3 câu 15–30 phút dưới ô tổng */
 .quote-list-content .estimate-note { margin: 0; padding: 12px 20px; border-top: 1px solid var(--brand-line-soft); font-size: 12px; line-height: 1.57; color: var(--brand-muted); }
 
-/* ---------- 204 · chọn / đổi mẫu mã ngay trong dòng, thêm mẫu khác của cùng SP ---------- */
-.quote-list-content .qvar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 6px; }
-.quote-list-content .qvar-label { font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--brand-text); }
-.quote-list-content .qvar select {
-  flex: 1 1 220px; min-width: 0; max-width: 100%; height: 40px; margin: 0; padding: 8px 36px 8px 12px;
-  border: 1px solid var(--brand-line); border-radius: var(--brand-radius-sm); background: var(--brand-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%236c737f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
-  color: var(--brand-text); font: 400 14px/1.57 var(--brand-body); appearance: none; -webkit-appearance: none; cursor: pointer;
+/* ---------- 204 · mọi phân loại của 1 SP nằm trong CÙNG thẻ: mỗi dòng = mẫu · số lượng · giá · bỏ dòng ---------- */
+.quote-list-content .qvar-list { display: flex; flex-direction: column; align-items: stretch; gap: 10px; margin-top: 8px; }
+.quote-list-content .qvar-line {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(96px, auto) 32px;
+  grid-template-areas: "label sel qty price del" ". hint hint hint hint"; align-items: center; column-gap: 10px; row-gap: 4px;
 }
-.quote-list-content .qvar select:focus { border-color: var(--brand-accent); outline: 0; }
-.quote-list-content .qvar.is-empty select { color: var(--brand-muted); }
-.quote-list-content .qvar.is-invalid select { border-color: var(--brand-error); box-shadow: 0 0 0 3px rgba(180, 35, 24, .12); }
-.quote-list-content .qvar-hint { flex: 1 1 100%; margin: 0; font-size: 12px; line-height: 1.57; color: var(--brand-muted); }
-.quote-list-content .qvar.is-invalid .qvar-hint { color: var(--brand-error); font-weight: 600; }
-.quote-list-content .qvar-more { min-height: 32px; padding: 0 4px; border: 0; border-radius: var(--brand-radius-sm); background: none; color: var(--brand-accent); font: 600 14px/1.4 var(--brand-body); cursor: pointer; }
-.quote-list-content .qvar-more:hover { text-decoration: underline; }
+.quote-list-content .qvar-label { grid-area: label; font-size: 14px; font-weight: 700; line-height: 1.4; color: var(--brand-text); }
+.quote-list-content .qvar-line select {
+  grid-area: sel; width: 100%; min-width: 0; height: 40px; margin: 0; padding: 8px 36px 8px 12px;
+  border: 1px solid var(--brand-line); border-radius: var(--brand-radius-sm); background: var(--brand-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%236c737f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center;
+  color: var(--brand-text); font: 400 14px/1.57 var(--brand-body); text-overflow: ellipsis; appearance: none; -webkit-appearance: none; cursor: pointer;
+}
+.quote-list-content .qvar-line select:focus { border-color: var(--brand-accent); outline: 0; }
+.quote-list-content .qvar-line.is-empty select { color: var(--brand-muted); }
+.quote-list-content .qvar-line.is-invalid select { border-color: var(--brand-error); box-shadow: 0 0 0 3px rgba(180, 35, 24, .12); }
+.quote-list-content .qvar-line .qty { grid-area: qty; }
+.quote-list-content .qvar-line .price { grid-area: price; justify-self: end; text-align: right; }
+.quote-list-content .qvar-del {
+  grid-area: del; width: 32px; height: 32px; padding: 0; border: 0; border-radius: var(--brand-radius-sm); background: transparent;
+  color: var(--brand-muted); display: inline-flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+}
+.quote-list-content .qvar-del:hover { color: var(--brand-accent); background: var(--brand-accent-soft); }
+.quote-list-content .qvar-hint { grid-area: hint; margin: 0; font-size: 12px; line-height: 1.57; color: var(--brand-muted); }
+.quote-list-content .qvar-line.is-invalid .qvar-hint { color: var(--brand-error); font-weight: 600; }
+/* nút (không phải link): thêm 1 dòng phân loại vào thẻ này */
+.quote-list-content .qvar-add {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px;
+  border: 1px solid var(--brand-line); border-radius: var(--brand-radius-sm); background: var(--brand-bg); color: var(--brand-accent);
+  font: 600 14px/1.4 var(--brand-body); cursor: pointer; transition: border-color var(--brand-dur) var(--brand-ease), background-color var(--brand-dur) var(--brand-ease);
+}
+.quote-list-content .qvar-add .vmx-ico { font-size: 12px; }
+.quote-list-content .qvar-add:hover { border-color: var(--brand-accent); background: var(--brand-accent-soft); }
 
 /* ---------- 207.2 · ô ghi chú từng dòng: chữ 14px, cao 40px (trước 12px / 21px) ---------- */
 .quote-list-content .note-wrap { padding: 0 12px; min-height: 40px; }
@@ -518,7 +535,7 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 }
 @media (max-width: 767.98px) {
   .quote-list-content .estimate-body + div .estimate-extra { margin-top: 0; }
-  .quote-list-content .qvar select { flex-basis: 100%; }
+  .quote-list-content .qvar-line { grid-template-columns: auto minmax(0, 1fr) 32px; grid-template-areas: "label label label" "sel sel del" "qty price price" "hint hint hint"; }
 }
 @media (prefers-reduced-motion: reduce) {
   .quote-list-content .wpcf7 input[type="submit"]:active { transform: none; }
@@ -2342,8 +2359,9 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 		<h3><span class="vmx-row-tag">204</span>Lưu mẫu mã + số lượng, đổi mẫu tại chỗ</h3>
 		<ul>
 			<li>Nút “Thêm vào báo giá” ở trang SP gửi kèm <code>variation_id</code> + <code>quantity</code> đang chọn (hiện <code>toggle_compare_product</code> chỉ gửi <code>product_id</code>).</li>
-			<li>Danh sách lưu theo cặp <b>SP + mẫu</b>. Dòng SP nhiều mẫu có ô chọn “Mẫu mã:” / “Màu sắc:” (option = <code>mã · kích thước · giá</code>), đổi mẫu thì giá + ảnh đổi theo; “+ Thêm mẫu khác” tách dòng mới; chọn trùng mẫu đã có → gộp số lượng.</li>
-			<li>Email ghi <code>Mẫu mã: LAPGHEP55B · 9 × 9 × 1.6 (ID 9434)</code>. Thêm từ thẻ SP (chưa chọn mẫu) → dòng “Chọn mẫu để xem giá”.</li>
+			<li>Danh sách lưu theo cặp <b>SP + mẫu</b>, nhưng hiển thị <b>1 thẻ / 1 SP</b>: mọi phân loại khách chọn nằm trong cùng thẻ, mỗi dòng = ô chọn “Mẫu mã:” / “Màu sắc:” (option = <code>mã · kích thước</code>) · số lượng · giá dòng · nút × bỏ dòng (khi thẻ có ≥ 2 dòng). Đổi mẫu thì giá + ảnh thẻ đổi theo.</li>
+			<li>Nút “+ Thêm mẫu khác” (dạng nút, không phải link) thêm 1 dòng phân loại trống ngay trong thẻ đó; mẫu đã chọn ở dòng khác bị khoá trong danh sách “(đã chọn)”; chọn đủ mọi mẫu thì nút ẩn. Thùng rác ở tên SP = bỏ cả SP.</li>
+			<li>Email gom theo SP, mỗi phân loại 1 dòng: <code>- Mẫu mã: LAPGHEP55B · 9 × 9 × 1.6 (ID 9434) | SL: 2 | Đơn giá… | Thành tiền…</code>. Thêm từ thẻ SP (chưa chọn mẫu) → dòng “Chọn mẫu để xem giá”.</li>
 			<li>Chưa chốt: bắt buộc chọn mẫu trước khi gửi hay không (bảng demo có công tắc; mặc định KHÔNG bắt buộc theo 203.4).</li>
 		</ul>
 
@@ -3034,11 +3052,12 @@ jQuery(function ($) {
   var SVG = {
     trash: '<svg class="vmx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 7h16M9 7V4.5h6V7M6.5 7l.9 12.5h9.2L17.5 7M10 11v5M14 11v5"/></svg>',
     pen: '<svg class="vmx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4ZM13.5 6.5l4 4"/></svg>',
+    close: '<svg class="vmx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     minus: '<svg class="vmx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14"/></svg>',
     plus: '<svg class="vmx-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>'
   };
 
-  var S = { req: false, quote: [], seq: 0 };
+  var S = { req: false, quote: [], seq: 0, notes: {} };
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -3047,7 +3066,7 @@ jQuery(function ($) {
   function varOf(p, vid) { if (!p.vars) return null; for (var i = 0; i < p.vars.length; i++) if (p.vars[i].id === vid) return p.vars[i]; return null; }
   function attrName(p) { return p.attr === 'color' ? 'Màu sắc' : 'Mẫu mã'; }
   function varLabel(x) { return x.code + (x.dim ? ' · ' + x.dim : ''); }
-  function newRow(pid, vid, qty) { S.seq++; return { key: 'r' + S.seq, pid: pid, vid: vid || 0, qty: qty || 1, note: '' }; }
+  function newRow(pid, vid, qty) { S.seq++; return { key: 'r' + S.seq, pid: pid, vid: vid || 0, qty: qty || 1 }; }
   function findRow(pid, vid) { for (var i = 0; i < S.quote.length; i++) if (S.quote[i].pid === pid && S.quote[i].vid === vid) return S.quote[i]; return null; }
   function rowOfKey(k) { for (var i = 0; i < S.quote.length; i++) if (S.quote[i].key === k) return S.quote[i]; return null; }
   /* đơn giá dòng: null = chưa có giá (giá liên hệ hoặc SP nhiều mẫu chưa chọn mẫu) */
@@ -3058,41 +3077,55 @@ jQuery(function ($) {
     return p.price;
   }
 
-  /* ---------- Vẽ 1 dòng SP ---------- */
-  function cardHTML(r) {
-    var p = P[r.pid], head, priceMeta = '';
-    if (p.vars) {                                           /* 204: chọn / đổi mẫu ngay trong dòng */
-      var empty = !r.vid, inval = empty && r.invalid;
-      var opts = '<option value="0">' + (p.attr === 'color' ? 'Chọn màu sắc' : 'Chọn mẫu mã') + '</option>' + p.vars.map(function (x) {
-        return '<option value="' + x.id + '"' + (x.id === r.vid ? ' selected' : '') + '>' + esc(varLabel(x)) + '</option>';
-      }).join('');
-      var hint = empty ? (S.req ? 'Bắt buộc chọn ' + attrName(p).toLowerCase() + ' trước khi gửi.' : 'Chưa chọn ' + attrName(p).toLowerCase() + ': chuyên viên sẽ gợi ý mẫu phù hợp khi báo giá.') : '';
-      head = '<div class="qvar' + (empty ? ' is-empty' : '') + (inval ? ' is-invalid' : '') + '">' +
-        '<label class="qvar-label" for="qv-' + r.key + '">' + attrName(p) + ':</label>' +
-        '<select id="qv-' + r.key + '" name="quote_variant[' + r.key + ']" data-quote-variant' + (hint ? ' aria-describedby="qh-' + r.key + '"' : '') + (inval ? ' aria-invalid="true"' : '') + '>' + opts + '</select>' +
-        '<button type="button" class="qvar-more" data-quote-more>+ Thêm ' + (p.attr === 'color' ? 'màu' : 'mẫu') + ' khác</button>' +
-        (hint ? '<p class="qvar-hint" id="qh-' + r.key + '">' + hint + '</p>' : '') + '</div>';
-    } else {
-      head = '<p class="meta">' + esc((p.sku ? 'SKU: ' + p.sku + ' | ' : '') + 'Phân loại: ' + p.cat) + '</p>';
-    }
-    if (p.regular) priceMeta = '<div class="price-meta"><span class="regular">' + wc(p.regular) + '</span> <span class="discount">' + p.discount + '</span></div>';
-    var u = rowUnit(r), price;
-    if (u === null) {                                       /* 203.1 / 203.4 */
-      price = p.contact ? '<div class="price price-contact">Giá: Liên hệ</div>'
-                        : '<div class="price price-pending">Chọn mẫu để xem giá</div>';
-    } else price = '<div class="price">' + formatMoney(u * r.qty) + '</div>';
-    var x = varOf(p, r.vid), thumb = x ? x.img : p.img;
-    return '<article class="quote-product-card" data-key="' + r.key + '" data-product-id="' + r.pid + '"' + (x ? ' data-variation-id="' + x.id + '"' : '') + '>' +
-      '<div class="card-top"><a class="thumb" href="' + p.href + '" tabindex="-1" aria-hidden="true"><img width="300" height="300" src="' + thumb + '" class="img" alt="" decoding="async"></a>' +
-      '<div class="card-head"><div class="title-row"><a class="name" href="' + p.href + '">' + esc(p.name) + '</a>' +
-      '<button type="button" class="btn-remove" data-quote-remove aria-label="Xóa ' + esc(p.name) + (x ? ' (' + esc(x.code) + ')' : '') + ' khỏi danh sách báo giá">' + SVG.trash + '</button></div>' + head + '</div></div>' +
-      '<div class="card-mid"><div class="prices">' + price + priceMeta + '</div>' +
-      '<div class="qty" data-quote-qty role="group" aria-label="Số lượng"><button type="button" class="qty-btn qty-minus" aria-label="Giảm số lượng">' + SVG.minus + '</button>' +
+  /* ---------- Vẽ 1 thẻ SP. SP nhiều mẫu: mọi phân loại khách chọn nằm TRONG CÙNG thẻ (204), mỗi dòng = mẫu · SL · giá ---------- */
+  function qtyHTML(r, label) {
+    return '<div class="qty" data-quote-qty role="group" aria-label="' + esc(label) + '"><button type="button" class="qty-btn qty-minus" aria-label="Giảm số lượng">' + SVG.minus + '</button>' +
       '<span class="qty-value" aria-live="polite">' + r.qty + '</span>' +
-      '<button type="button" class="qty-btn qty-plus" aria-label="Tăng số lượng">' + SVG.plus + '</button></div></div>' +
-      '<div class="note-wrap"><span class="note-ico" aria-hidden="true">' + SVG.pen + '</span>' +
-      '<input type="text" class="note-input" name="quote_note[' + r.key + ']" aria-label="Ghi chú cho ' + esc(p.name) + '" data-quote-note placeholder="Ghi chú cho sản phẩm này" autocomplete="off" value="' + esc(r.note || '') + '"></div></article>';
+      '<button type="button" class="qty-btn qty-plus" aria-label="Tăng số lượng">' + SVG.plus + '</button></div>';
   }
+  function priceHTML(r) {                                    /* 203.1 / 203.4 */
+    var p = P[r.pid], u = rowUnit(r);
+    if (u === null) return p.contact ? '<div class="price price-contact">Giá: Liên hệ</div>' : '<div class="price price-pending">Chọn mẫu để xem giá</div>';
+    return '<div class="price">' + formatMoney(u * r.qty) + '</div>';
+  }
+  function lineHTML(p, r, rows) {
+    var empty = !r.vid, inval = empty && r.invalid, used = {};
+    rows.forEach(function (o) { if (o !== r && o.vid) used[o.vid] = 1; });
+    var opts = '<option value="0">' + (p.attr === 'color' ? 'Chọn màu sắc' : 'Chọn mẫu mã') + '</option>' + p.vars.map(function (x) {
+      return '<option value="' + x.id + '"' + (x.id === r.vid ? ' selected' : '') + (used[x.id] ? ' disabled' : '') + '>' + esc(varLabel(x)) + (used[x.id] ? ' (đã chọn)' : '') + '</option>';
+    }).join('');
+    var hint = empty ? (S.req ? 'Bắt buộc chọn ' + attrName(p).toLowerCase() + ' trước khi gửi.' : 'Chưa chọn ' + attrName(p).toLowerCase() + ': chuyên viên sẽ gợi ý mẫu phù hợp khi báo giá.') : '';
+    var x = varOf(p, r.vid), name = x ? x.code : attrName(p).toLowerCase() + ' chưa chọn';
+    return '<div class="qvar-line' + (empty ? ' is-empty' : '') + (inval ? ' is-invalid' : '') + '" data-key="' + r.key + '">' +
+      '<label class="qvar-label" for="qv-' + r.key + '">' + attrName(p) + ':</label>' +
+      '<select id="qv-' + r.key + '" name="quote_variant[' + r.key + ']" data-quote-variant' + (hint ? ' aria-describedby="qh-' + r.key + '"' : '') + (inval ? ' aria-invalid="true"' : '') + '>' + opts + '</select>' +
+      qtyHTML(r, 'Số lượng ' + name) + priceHTML(r) +
+      (rows.length > 1 ? '<button type="button" class="qvar-del" data-line-remove aria-label="Bỏ dòng ' + esc(name) + '">' + SVG.close + '</button>' : '') +
+      (hint ? '<p class="qvar-hint" id="qh-' + r.key + '">' + hint + '</p>' : '') + '</div>';
+  }
+  function cardHTML(pid) {
+    var p = P[pid], rows = S.quote.filter(function (r) { return r.pid === pid; }), body, x = null;
+    rows.forEach(function (r) { if (!x && r.vid) x = varOf(p, r.vid); });
+    if (p.vars) {
+      var full = rows.length >= p.vars.length;
+      body = '<div class="qvar-list">' + rows.map(function (r) { return lineHTML(p, r, rows); }).join('') +
+        (full ? '' : '<button type="button" class="qvar-add" data-quote-more>' + SVG.plus + '<span>Thêm ' + (p.attr === 'color' ? 'màu' : 'mẫu') + ' khác</span></button>') + '</div>';
+    } else {
+      body = '<p class="meta">' + esc((p.sku ? 'SKU: ' + p.sku + ' | ' : '') + 'Phân loại: ' + p.cat) + '</p>';
+    }
+    var mid = '';
+    if (!p.vars) {
+      var r = rows[0], meta = p.regular ? '<div class="price-meta"><span class="regular">' + wc(p.regular) + '</span> <span class="discount">' + p.discount + '</span></div>' : '';
+      mid = '<div class="card-mid" data-key="' + r.key + '"><div class="prices">' + priceHTML(r) + meta + '</div>' + qtyHTML(r, 'Số lượng') + '</div>';
+    }
+    return '<article class="quote-product-card' + (p.vars ? ' has-variants' : '') + '" data-product-id="' + pid + '">' +
+      '<div class="card-top"><a class="thumb" href="' + p.href + '" tabindex="-1" aria-hidden="true"><img width="300" height="300" src="' + (x ? x.img : p.img) + '" class="img" alt="" decoding="async"></a>' +
+      '<div class="card-head"><div class="title-row"><a class="name" href="' + p.href + '">' + esc(p.name) + '</a>' +
+      '<button type="button" class="btn-remove" data-quote-remove aria-label="Xóa ' + esc(p.name) + ' khỏi danh sách báo giá">' + SVG.trash + '</button></div>' + body + '</div></div>' + mid +
+      '<div class="note-wrap"><span class="note-ico" aria-hidden="true">' + SVG.pen + '</span>' +
+      '<input type="text" class="note-input" name="quote_note[' + pid + ']" aria-label="Ghi chú cho ' + esc(p.name) + '" data-quote-note placeholder="Ghi chú cho sản phẩm này" autocomplete="off" value="' + esc(S.notes[pid] || '') + '"></div></article>';
+  }
+  function pids() { var seen = {}, out = []; S.quote.forEach(function (r) { if (!seen[r.pid]) { seen[r.pid] = 1; out.push(r.pid); } }); return out; }
 
   function emptyHTML() {                                    /* 206.2 */
     return '<div class="empty-state"><p class="empty-title">Danh sách báo giá đang trống</p>' +
@@ -3103,7 +3136,7 @@ jQuery(function ($) {
   /* ---------- Vẽ cả danh sách + khối Giá trị dự tính (203.2, 203.3) ---------- */
   function render() {
     var q = S.quote;
-    $('[data-quote-product-list]').innerHTML = q.length ? q.map(cardHTML).join('') : emptyHTML();
+    $('[data-quote-product-list]').innerHTML = q.length ? pids().map(cardHTML).join('') : emptyHTML();
     $('[data-quote-count-badge]').textContent = q.length + ' sản phẩm đã chọn';
     var label = $('[data-quote-total-label]'), tot = $('[data-quote-total]'), ex = $('[data-quote-extras]');
     var priced = 0, sum = 0, contact = 0, pending = 0;
@@ -3129,16 +3162,19 @@ jQuery(function ($) {
 
   /* ---------- 203.5 + 204: chuỗi gửi qua ô your-quote-items (email) ---------- */
   function emailString() {
-    return S.quote.map(function (r, i) {
-      var p = P[r.pid], x = varOf(p, r.vid), line = (i + 1) + '. ' + p.name + ' (ID ' + r.pid + ')';
-      if (p.vars) line += '\n   ' + attrName(p) + ': ' + (x ? varLabel(x) + ' (ID ' + x.id + ')' : 'Chưa chọn — nhờ chuyên viên tư vấn');
-      else if (p.sku) line += '\n   Mã: ' + p.sku;
-      line += '\n   Số lượng: ' + r.qty;
-      var u = rowUnit(r);
-      if (u === null) line += ' | Đơn giá: ' + (p.contact ? 'Liên hệ' : 'Theo mẫu khách chọn');
-      else line += ' | Đơn giá: ' + formatMoney(u) + ' | Thành tiền: ' + formatMoney(u * r.qty);
-      if (r.note) line += '\n   Ghi chú: ' + r.note;
-      return line;
+    return pids().map(function (pid, i) {
+      var p = P[pid], rows = S.quote.filter(function (r) { return r.pid === pid; });
+      var out = (i + 1) + '. ' + p.name + ' (ID ' + pid + ')' + (p.sku ? ' · Mã: ' + p.sku : '');
+      rows.forEach(function (r) {
+        var x = varOf(p, r.vid), u = rowUnit(r), line = '\n   - ';
+        if (p.vars) line += attrName(p) + ': ' + (x ? varLabel(x) + ' (ID ' + x.id + ')' : 'Chưa chọn — nhờ chuyên viên tư vấn') + ' | ';
+        line += 'SL: ' + r.qty;
+        if (u === null) line += ' | Đơn giá: ' + (p.contact ? 'Liên hệ' : 'Theo mẫu khách chọn');
+        else line += ' | Đơn giá: ' + formatMoney(u) + ' | Thành tiền: ' + formatMoney(u * r.qty);
+        out += line;
+      });
+      if (S.notes[pid]) out += '\n   Ghi chú: ' + S.notes[pid];
+      return out;
     }).join('\n');
   }
   function syncEmail() {
@@ -3161,26 +3197,34 @@ jQuery(function ($) {
   document.addEventListener('click', function (e) {
     var t = e.target, el, card = t.closest('.quote-product-card');
     if (!card) return;
-    var r = rowOfKey(card.dataset.key); if (!r) return;
-    if (t.closest('[data-quote-remove]')) {
-      S.quote = S.quote.filter(function (x) { return x !== r; }); render();
+    var pid = +card.dataset.productId, line = t.closest('[data-key]'), r = line ? rowOfKey(line.dataset.key) : null;
+    if (t.closest('[data-quote-remove]')) {                 /* thùng rác: bỏ cả SP (mọi phân loại) */
+      S.quote = S.quote.filter(function (x) { return x.pid !== pid; }); delete S.notes[pid]; render();
       var next = $('.quote-product-card .btn-remove') || $('.vmx-cat-links a'); if (next) next.focus({ preventScroll: true });
       return;
     }
-    if ((el = t.closest('.qty-btn'))) {
+    if (r && t.closest('[data-line-remove]')) {             /* ×: bỏ 1 phân loại, giữ thẻ */
+      S.quote = S.quote.filter(function (x) { return x !== r; }); render();
+      var add = $('.quote-product-card[data-product-id="' + pid + '"] select'); if (add) add.focus({ preventScroll: true });
+      return;
+    }
+    if (r && (el = t.closest('.qty-btn'))) {
       r.qty = Math.max(1, r.qty + (el.classList.contains('qty-plus') ? 1 : -1)); render();
       var again = $('[data-key="' + r.key + '"] .' + (el.classList.contains('qty-plus') ? 'qty-plus' : 'qty-minus')); if (again) again.focus({ preventScroll: true });
       return;
     }
-    if (t.closest('[data-quote-more]')) {                   /* 204: thêm mẫu khác của cùng SP → dòng mới ngay dưới */
-      if (S.quote.length >= CAP) { capToast(); return; }
-      var nr = newRow(r.pid, 0, 1); S.quote.splice(S.quote.indexOf(r) + 1, 0, nr); render();
-      var sel = $('[data-key="' + nr.key + '"] select'); if (sel) sel.focus({ preventScroll: true });
+    if (t.closest('[data-quote-more]')) {                   /* 204: thêm 1 phân loại nữa trong CÙNG thẻ */
+      var rows = S.quote.filter(function (x) { return x.pid === pid; }), blank = rows.filter(function (x) { return !x.vid; })[0];
+      if (!blank) {
+        if (S.quote.length >= CAP) { capToast(); return; }
+        blank = newRow(pid, 0, 1); S.quote.splice(S.quote.indexOf(rows[rows.length - 1]) + 1, 0, blank); render();
+      }
+      var sel = $('[data-key="' + blank.key + '"] select'); if (sel) sel.focus({ preventScroll: true });
     }
   });
   document.addEventListener('change', function (e) {
     var sel = e.target.closest('[data-quote-variant]'); if (!sel) return;
-    var r = rowOfKey(sel.closest('.quote-product-card').dataset.key), vid = +sel.value, dup = vid ? findRow(r.pid, vid) : null;
+    var r = rowOfKey(sel.closest('[data-key]').dataset.key), vid = +sel.value, dup = vid ? findRow(r.pid, vid) : null;
     if (dup && dup !== r) {                                 /* chọn trùng mẫu đã có → gộp số lượng */
       dup.qty += r.qty; S.quote = S.quote.filter(function (x) { return x !== r; }); render();
       showToast('Mẫu ' + varOf(P[r.pid], vid).code + ' đã có trong danh sách: đã cộng số lượng vào dòng đó.');
@@ -3191,7 +3235,7 @@ jQuery(function ($) {
   });
   document.addEventListener('input', function (e) {
     var n = e.target.closest('[data-quote-note]'); if (!n) return;
-    var r = rowOfKey(n.closest('.quote-product-card').dataset.key); if (r) { r.note = n.value; syncEmail(); }
+    S.notes[+n.closest('.quote-product-card').dataset.productId] = n.value; syncEmail();
   });
   function capToast() { showToast('Danh sách báo giá đã đủ ' + CAP + ' sản phẩm. Gửi yêu cầu này trước hoặc xoá bớt để thêm sản phẩm khác.'); }
 
@@ -3238,7 +3282,7 @@ jQuery(function ($) {
 
   /* ---------- Bảng demo ---------- */
   function load(name) {
-    S.seq = 0; S.quote = SCN[name].map(function (a) { return newRow(a[0], a[1], a[2]); });
+    S.seq = 0; S.notes = {}; S.quote = SCN[name].map(function (a) { return newRow(a[0], a[1], a[2]); });
     alertBox.hidden = true; result.hidden = true; render();
   }
   function seg(group, attr, fn) {
