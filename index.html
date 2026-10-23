@@ -474,6 +474,12 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 .quote-list-content .qvar-add:hover { border-color: var(--brand-accent); background: var(--brand-accent-soft); }
 
 /* ---------- bổ sung 23/10 · toast xoá có Hoàn tác: nút dùng kiểu .thc-cart-toast__link của site, là <button> nên reset viền/chữ ---------- */
+/* toast lên đầu màn hình, dưới header dính; --vmx-toast-top do app.js tính theo đáy #header */
+.thc-cart-toast.vmx-toast-top { top: var(--vmx-toast-top, 116px); bottom: auto; transform: translateX(-50%) translateY(-12px); }
+.thc-cart-toast.vmx-toast-top.is-visible { transform: translateX(-50%) translateY(0); }
+/* viền sáng mảnh: trên nền trắng gần như không thấy, trên footer navy tách toast khỏi nền */
+.thc-cart-toast.vmx-toast-top .thc-cart-toast__inner { box-shadow: 0 0 0 1px rgba(255, 255, 255, .28), 0 12px 32px rgba(17, 25, 39, .28); }
+@media (prefers-reduced-motion: reduce) { .thc-cart-toast.vmx-toast-top { transition: opacity .2s linear; transform: translateX(-50%); } }
 .thc-cart-toast .vmx-undo { min-height: 32px; border: 0; font-family: var(--brand-body); cursor: pointer; }
 .thc-cart-toast .vmx-undo:focus-visible { outline: 2px solid var(--brand-on-dark); outline-offset: 2px; }
 
@@ -2307,7 +2313,8 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 </div>
 <div id="body_overlay"></div>
 <!-- ============ VỎ DEMO (không thuộc trang) ============ -->
-<div id="thc-cart-toast" class="thc-cart-toast" role="status" aria-live="polite" hidden>
+<!-- toast trang này hiện TRÊN ĐẦU, ngay dưới header đang dính (user 23/10: ở đáy bị chìm khi cuộn tới footer navy) -->
+<div id="thc-cart-toast" class="thc-cart-toast vmx-toast-top" role="status" aria-live="polite" hidden>
 	<div class="thc-cart-toast__inner">
 		<i class="fa-light fa-circle-info thc-cart-toast__ico" aria-hidden="true" data-toast-ico></i>
 		<p class="thc-cart-toast__text" data-toast-text></p>
@@ -2396,6 +2403,7 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 		<h3><span class="vmx-row-tag">+</span>Xoá có hoàn tác (bổ sung 23/10)</h3>
 		<ul>
 			<li>Bấm thùng rác (xoá cả SP) hoặc × (bỏ 1 phân loại) vẫn xoá ngay, rồi hiện toast <code>.thc-cart-toast</code> “Đã xoá … · <b>Hoàn tác</b>” trong <b>5 giây</b>. Bấm Hoàn tác → trả SP / phân loại về đúng vị trí cũ, giữ số lượng + ghi chú; focus về lại nút vừa bấm.</li>
+			<li>Toast ở trang này hiện <b>trên đầu màn hình, ngay dưới header đang dính</b> (<code>top</code> = đáy <code>#header</code> + 12px, tính lại khi cuộn vì header mobile co 114 → 68px), trượt xuống khi hiện. Ở đáy như mặc định thì nền tối của toast chìm vào footer navy, và trên mobile còn đè cụm nút Zalo / Gọi / Messenger.</li>
 			<li>Rê chuột hoặc focus vào toast thì dừng đếm (đủ thời gian cho người dùng bàn phím), rời ra thì đếm lại 5 giây. Xoá tiếp món khác → toast thay bằng món mới, chỉ hoàn tác được lần xoá gần nhất.</li>
 			<li>Site thật: chỉ ghi cookie danh sách sau khi hết 5 giây (hoặc ghi ngay rồi ghi lại khi hoàn tác) — cách nào cũng được, miễn tải lại trang trong lúc toast còn hiện không mất món đã hoàn tác.</li>
 		</ul>
@@ -3214,9 +3222,12 @@ jQuery(function ($) {
     undoBtn.hidden = !undoFn;
     ico.className = 'fa-light ' + (undoFn ? 'fa-trash-can' : 'fa-circle-info') + ' thc-cart-toast__ico';
     toastMs = undoFn ? 5000 : 4000;
-    toast.hidden = false; void toast.offsetWidth; toast.classList.add('is-visible');
+    placeToast(); toast.hidden = false; void toast.offsetWidth; toast.classList.add('is-visible');
     armToast();
   }
+  /* đặt toast ngay dưới header đang dính (header mobile co lại khi cuộn → tính lại lúc cuộn) */
+  function placeToast() { var h = $('#header'), y = h ? Math.max(0, h.getBoundingClientRect().bottom) : 0; toast.style.setProperty('--vmx-toast-top', Math.round(y + 12) + 'px'); }
+  window.addEventListener('scroll', function () { if (!toast.hidden) placeToast(); }, { passive: true });
   function armToast() { clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, toastMs); }
   function hideToast() {
     clearTimeout(toastTimer); undoFn = null; toast.classList.remove('is-visible');
