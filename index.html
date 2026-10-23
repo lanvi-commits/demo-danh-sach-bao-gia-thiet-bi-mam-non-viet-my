@@ -473,6 +473,10 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 .quote-list-content .qvar-add .vmx-ico { font-size: 12px; }
 .quote-list-content .qvar-add:hover { border-color: var(--brand-accent); background: var(--brand-accent-soft); }
 
+/* ---------- bổ sung 23/10 · toast xoá có Hoàn tác: nút dùng kiểu .thc-cart-toast__link của site, là <button> nên reset viền/chữ ---------- */
+.thc-cart-toast .vmx-undo { min-height: 32px; border: 0; font-family: var(--brand-body); cursor: pointer; }
+.thc-cart-toast .vmx-undo:focus-visible { outline: 2px solid var(--brand-on-dark); outline-offset: 2px; }
+
 /* ---------- 207.2 · ô ghi chú từng dòng: chữ 14px, cao 40px (trước 12px / 21px) ---------- */
 .quote-list-content .note-wrap { padding: 0 12px; min-height: 40px; }
 .quote-list-content .note-ico { font-size: 14px; }
@@ -536,6 +540,14 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 @media (max-width: 767.98px) {
   .quote-list-content .estimate-body + div .estimate-extra { margin-top: 0; }
   .quote-list-content .qvar-line { grid-template-columns: auto minmax(0, 1fr) 32px; grid-template-areas: "label label label" "sel sel del" "qty price price" "hint hint hint"; }
+  /* thẻ SP nhiều mẫu: dòng phân loại chạy hết bề ngang thẻ (dưới ảnh), không bị ép trong cột tên 242px */
+  .quote-list-content .has-variants .card-top { display: grid; grid-template-columns: 72px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 12px; row-gap: 4px; }
+  .quote-list-content .has-variants .card-head { display: contents; }
+  .quote-list-content .has-variants .thumb { grid-row: 1 / span 2; }
+  .quote-list-content .has-variants .title-row { grid-column: 2; }
+  .quote-list-content .has-variants .card-head > .meta { grid-column: 2; align-self: start; }
+  .quote-list-content .has-variants .qvar-list { grid-column: 1 / -1; margin-top: 8px; }
+  .quote-list-content .qvar-line .price-pending { white-space: normal; }
 }
 @media (prefers-reduced-motion: reduce) {
   .quote-list-content .wpcf7 input[type="submit"]:active { transform: none; }
@@ -2297,8 +2309,10 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 <!-- ============ VỎ DEMO (không thuộc trang) ============ -->
 <div id="thc-cart-toast" class="thc-cart-toast" role="status" aria-live="polite" hidden>
 	<div class="thc-cart-toast__inner">
-		<i class="fa-light fa-circle-info thc-cart-toast__ico" aria-hidden="true"></i>
+		<i class="fa-light fa-circle-info thc-cart-toast__ico" aria-hidden="true" data-toast-ico></i>
 		<p class="thc-cart-toast__text" data-toast-text></p>
+		<!-- bổ sung 23/10: xoá có hoàn tác 5 giây (dùng lại kiểu nút .thc-cart-toast__link của site) -->
+		<button type="button" class="thc-cart-toast__link vmx-undo" data-toast-undo hidden>Hoàn tác</button>
 		<button type="button" class="thc-cart-toast__close" aria-label="Đóng" data-toast-close>&times;</button>
 	</div>
 </div>
@@ -2377,6 +2391,13 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 			<li>Ô tick 20px, <code>accent-color:#D71010</code>, cách chữ 8px (chữ 14px). Bấm cả dòng chữ cũng tick được.</li>
 			<li>0 sản phẩm: chặn gửi (kiểm cả phía máy chủ: <code>your-quote-items</code> bắt buộc, hook <code>wpcf7_validate</code>) + khung trống gợi ý 6 danh mục. Chọn “Trống” ở bảng demo rồi bấm gửi để xem.</li>
 			<li>Ô bắt buộc sai/thiếu báo lỗi tại chỗ (viền đỏ + chữ dưới ô), SĐT kiểm 10 số.</li>
+		</ul>
+
+		<h3><span class="vmx-row-tag">+</span>Xoá có hoàn tác (bổ sung 23/10)</h3>
+		<ul>
+			<li>Bấm thùng rác (xoá cả SP) hoặc × (bỏ 1 phân loại) vẫn xoá ngay, rồi hiện toast <code>.thc-cart-toast</code> “Đã xoá … · <b>Hoàn tác</b>” trong <b>5 giây</b>. Bấm Hoàn tác → trả SP / phân loại về đúng vị trí cũ, giữ số lượng + ghi chú; focus về lại nút vừa bấm.</li>
+			<li>Rê chuột hoặc focus vào toast thì dừng đếm (đủ thời gian cho người dùng bàn phím), rời ra thì đếm lại 5 giây. Xoá tiếp món khác → toast thay bằng món mới, chỉ hoàn tác được lần xoá gần nhất.</li>
+			<li>Site thật: chỉ ghi cookie danh sách sau khi hết 5 giây (hoặc ghi ngay rồi ghi lại khi hoàn tác) — cách nào cũng được, miễn tải lại trang trong lúc toast còn hiện không mất món đã hoàn tác.</li>
 		</ul>
 
 		<h3><span class="vmx-row-tag">207</span>HTML form</h3>
@@ -3106,12 +3127,13 @@ jQuery(function ($) {
   function cardHTML(pid) {
     var p = P[pid], rows = S.quote.filter(function (r) { return r.pid === pid; }), body, x = null;
     rows.forEach(function (r) { if (!x && r.vid) x = varOf(p, r.vid); });
+    var meta = '<p class="meta">' + esc((p.sku ? 'SKU: ' + p.sku + ' | ' : '') + 'Phân loại: ' + p.cat) + '</p>';   /* như live, cả SP nhiều mẫu */
     if (p.vars) {
       var full = rows.length >= p.vars.length;
-      body = '<div class="qvar-list">' + rows.map(function (r) { return lineHTML(p, r, rows); }).join('') +
+      body = meta + '<div class="qvar-list">' + rows.map(function (r) { return lineHTML(p, r, rows); }).join('') +
         (full ? '' : '<button type="button" class="qvar-add" data-quote-more>' + SVG.plus + '<span>Thêm ' + (p.attr === 'color' ? 'màu' : 'mẫu') + ' khác</span></button>') + '</div>';
     } else {
-      body = '<p class="meta">' + esc((p.sku ? 'SKU: ' + p.sku + ' | ' : '') + 'Phân loại: ' + p.cat) + '</p>';
+      body = meta;
     }
     var mid = '';
     if (!p.vars) {
@@ -3183,14 +3205,39 @@ jQuery(function ($) {
     var pre = $('[data-dev-email]'); if (pre) pre.textContent = s || '(danh sách trống — form không cho gửi)';
   }
 
-  /* ---------- Toast của site (.thc-cart-toast) ---------- */
-  var toast = $('#thc-cart-toast'), toastTimer = null;
-  function showToast(text) {
+  /* ---------- Toast của site (.thc-cart-toast); có nút Hoàn tác khi xoá (bổ sung 23/10) ---------- */
+  var toast = $('#thc-cart-toast'), toastTimer = null, toastMs = 4000, undoFn = null;
+  var undoBtn = $('[data-toast-undo]', toast), ico = $('[data-toast-ico]', toast);
+  function showToast(text, onUndo) {
+    undoFn = onUndo || null;
     $('[data-toast-text]', toast).textContent = text;
+    undoBtn.hidden = !undoFn;
+    ico.className = 'fa-light ' + (undoFn ? 'fa-trash-can' : 'fa-circle-info') + ' thc-cart-toast__ico';
+    toastMs = undoFn ? 5000 : 4000;
     toast.hidden = false; void toast.offsetWidth; toast.classList.add('is-visible');
-    clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, 4000);
+    armToast();
   }
-  function hideToast() { toast.classList.remove('is-visible'); setTimeout(function () { if (!toast.classList.contains('is-visible')) toast.hidden = true; }, 260); }
+  function armToast() { clearTimeout(toastTimer); toastTimer = setTimeout(hideToast, toastMs); }
+  function hideToast() {
+    clearTimeout(toastTimer); undoFn = null; toast.classList.remove('is-visible');
+    setTimeout(function () { if (!toast.classList.contains('is-visible')) toast.hidden = true; }, 260);
+  }
+  /* rê chuột / focus vào toast: dừng đếm; rời ra: đếm lại từ đầu */
+  toast.addEventListener('mouseenter', function () { clearTimeout(toastTimer); });
+  toast.addEventListener('focusin', function () { clearTimeout(toastTimer); });
+  toast.addEventListener('mouseleave', function () { if (!toast.contains(document.activeElement)) armToast(); });
+  toast.addEventListener('focusout', function (e) { if (!toast.contains(e.relatedTarget)) armToast(); });
+  undoBtn.addEventListener('click', function () { var fn = undoFn; hideToast(); if (fn) fn(); });
+  function short(name) { return name.length > 42 ? name.slice(0, 40).replace(/\s+\S*$/, '') + '…' : name; }
+  /* xoá ngay + cho hoàn tác: chụp lại danh sách trước khi xoá, Hoàn tác = trả nguyên trạng */
+  function removeWithUndo(keep, text, refocus) {
+    var before = S.quote.slice(), notes = JSON.parse(JSON.stringify(S.notes));
+    S.quote = S.quote.filter(keep); render();
+    showToast(text, function () {
+      S.quote = before; S.notes = notes; render();
+      var el = refocus(); if (el) el.focus({ preventScroll: true });
+    });
+  }
   $('[data-toast-close]', toast).addEventListener('click', hideToast);
 
   /* ---------- Thao tác trên danh sách ---------- */
@@ -3199,12 +3246,15 @@ jQuery(function ($) {
     if (!card) return;
     var pid = +card.dataset.productId, line = t.closest('[data-key]'), r = line ? rowOfKey(line.dataset.key) : null;
     if (t.closest('[data-quote-remove]')) {                 /* thùng rác: bỏ cả SP (mọi phân loại) */
-      S.quote = S.quote.filter(function (x) { return x.pid !== pid; }); delete S.notes[pid]; render();
+      removeWithUndo(function (x) { return x.pid !== pid; }, 'Đã xoá “' + short(P[pid].name) + '”',
+        function () { return $('.quote-product-card[data-product-id="' + pid + '"] .btn-remove'); });
       var next = $('.quote-product-card .btn-remove') || $('.vmx-cat-links a'); if (next) next.focus({ preventScroll: true });
       return;
     }
     if (r && t.closest('[data-line-remove]')) {             /* ×: bỏ 1 phân loại, giữ thẻ */
-      S.quote = S.quote.filter(function (x) { return x !== r; }); render();
+      var gone = varOf(P[pid], r.vid), key = r.key;
+      removeWithUndo(function (x) { return x !== r; }, 'Đã xoá ' + (gone ? attrName(P[pid]).toLowerCase() + ' ' + gone.code : 'dòng chưa chọn mẫu') + ' khỏi “' + short(P[pid].name) + '”',
+        function () { return $('[data-key="' + key + '"] [data-line-remove]'); });
       var add = $('.quote-product-card[data-product-id="' + pid + '"] select'); if (add) add.focus({ preventScroll: true });
       return;
     }
@@ -3282,7 +3332,7 @@ jQuery(function ($) {
 
   /* ---------- Bảng demo ---------- */
   function load(name) {
-    S.seq = 0; S.notes = {}; S.quote = SCN[name].map(function (a) { return newRow(a[0], a[1], a[2]); });
+    hideToast(); S.seq = 0; S.notes = {}; S.quote = SCN[name].map(function (a) { return newRow(a[0], a[1], a[2]); });
     alertBox.hidden = true; result.hidden = true; render();
   }
   function seg(group, attr, fn) {
