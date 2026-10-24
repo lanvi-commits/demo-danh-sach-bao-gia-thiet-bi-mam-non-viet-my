@@ -427,6 +427,12 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 
 /* ---------- 202 · mô tả dưới H1: <div> → <p>, chữ giữ như cũ ---------- */
 .quote-list-hero .desc { margin: 0; }
+/* Khối H1 gọn lại (feedback 24/10 "thu gọn khoảng trắng phía trên") — chỉ ≥768, mobile theme đã 24/16.
+   Trước: trên 32px (luật chung section:not(:first-child){padding-top:2rem} của theme thắng .quote-list-hero 60px)
+   + dưới 60px. Selector .page-quote-list section.quote-list-hero (0,2,1) để thắng luật chung đó, giống media mobile của theme. */
+@media (min-width: 768px) {
+  .page-quote-list section.quote-list-hero { padding: 16px 0 32px; }
+}
 
 /* ---------- 203 · giá liên hệ / chưa chọn mẫu ---------- */
 /* 203.1 dòng SP giá liên hệ: CÙNG CỠ với giá số của trang này (.price 18px · 700 · đỏ của theme) — không đặt font-size riêng.
@@ -2406,6 +2412,12 @@ body::-webkit-scrollbar,.thc-scroll::-webkit-scrollbar{width:10px;background-col
 			<li>Toast ở trang này hiện <b>trên đầu màn hình, ngay dưới header đang dính</b> (<code>top</code> = đáy <code>#header</code> + 12px, tính lại khi cuộn vì header mobile co 114 → 68px), trượt xuống khi hiện. Ở đáy như mặc định thì nền tối của toast chìm vào footer navy, và trên mobile còn đè cụm nút Zalo / Gọi / Messenger.</li>
 			<li>Rê chuột hoặc focus vào toast thì dừng đếm (đủ thời gian cho người dùng bàn phím), rời ra thì đếm lại 5 giây. Xoá tiếp món khác → toast thay bằng món mới, chỉ hoàn tác được lần xoá gần nhất.</li>
 			<li>Site thật: chỉ ghi cookie danh sách sau khi hết 5 giây (hoặc ghi ngay rồi ghi lại khi hoàn tác) — cách nào cũng được, miễn tải lại trang trong lúc toast còn hiện không mất món đã hoàn tác.</li>
+		</ul>
+
+		<h3><span class="vmx-row-tag">+</span>Thu gọn khoảng trắng khối H1 (bổ sung 24/10)</h3>
+		<ul>
+			<li>Từ 768px trở lên, <code>.quote-list-hero</code> đổi padding thành <b>16px trên · 32px dưới</b> (trước: 32px · 60px). Khối tiêu đề ở 1440px cao 213 → 169px. Mobile giữ nguyên 24px · 16px của theme.</li>
+			<li>Phần trên đang là 32px chứ không phải 60px như <code>template-compare.css</code> khai, vì luật chung <code>section:not(:first-child){padding-top:2rem}</code> của theme mạnh hơn <code>.quote-list-hero</code>. Viết <code>.page-quote-list section.quote-list-hero</code> (cùng kiểu media mobile của theme) thì mới thắng luật đó.</li>
 		</ul>
 
 		<h3><span class="vmx-row-tag">207</span>HTML form</h3>
